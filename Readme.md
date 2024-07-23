@@ -30,12 +30,6 @@ For more detail on how to disable the CloudWatch logging, see the [Axiom documen
 check the [Troubleshooting](#troubleshooting) section below.
 
 
-2. Add the extension as a layer with the AWS CLI:
-
-```shell
-$ aws lambda update-function-configuration --function-name my-function \
-    --layers arn:aws:lambda:<AWS_REGION>:694952825951:layer:axiom-extension-<ARCH>:<VERSION>
-```
 * Use the **latest** version number specified on the [Releases](https://github.com/axiomhq/axiom-lambda-extension/releases) page for the `VERSION` parameter. For example, `4`.
 * For more detail on `AWS_REGION` and `ARCH` parameters, expand the table below:
 
