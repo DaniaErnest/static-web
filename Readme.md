@@ -228,18 +228,18 @@ See [variables.tf] and [examples/] for details and use-cases.
 
   A list of permission objects of external resources (like a CloudWatch Event Rule, SNS, or S3) that should have permission to access the Lambda function.
 
-  Default is `[]`.
 
   Example:
 
   ```hcl
-  permissions = [
-    {
-      statement_id = "AllowExecutionFromSNS"
-      principal    = "sns.amazonaws.com"
-      source_arn   = aws_sns_topic.lambda.arn
-    }
-  ]
+  resource "aws_lambda_permission" "allow_bucket" {
+  statement_id  = "AllowExecutionFromS3Bucket"
+  action        = "lambda:InvokeFunction"
+  #function_name = module.lambda_function.lambda_function_name
+  function_name = aws_lambda_function.test_lambda.function_name
+  
+  principal     = "s3.amazonaws.com"
+  so
   ```
 
   Each `permission` object in the list accepts the following attributes:
