@@ -68,24 +68,14 @@ All Lambda Layers
 
 Using [AWS lambda module](https://registry.terraform.io/modules/terraform-aws-modules/lambda/aws/latest):
 ```tf
-module "lambda_function" {
-  source = "terraform-aws-modules/lambda/aws"
-
-  function_name = "my-lambda1"
-  description   = "My awesome lambda function"
-  handler       = "index.lambda_handler"
-  runtime       = "python3.8"
-
-  source_path = "../src/lambda-function1"
-
-  layers = [
-    "arn:aws:lambda:<AWS_REGION>:694952825951:layer:axiom-extension-<ARCH>:<VERSION>"
-  ]
-
-  environment_variables = {
-    AXIOM_TOKEN   = "axiom-token"
-    AXIOM_DATASET = "axiom-dataset"
-  }
+module "lambda_triggered" {
+  source = "../lambda"
+  function_name = "axiom_lambda"
+  bucket_arn = module.s3_bucket.arn
+  bucket_id = module.s3_bucket.id
+  filename = local.module_source_path
+  source_path = local.module_source_hash 
+  handler = "axiom_lambda.lambda_handler"
 }
 ```
 
