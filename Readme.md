@@ -118,7 +118,7 @@ module "lambda_triggered" {
 }
 ```
 
-**Note**: This module expects the ARN of an existing s3-Bucket, ID of an existing s3-Bucket, filename, source_path and handler through the variable.
+**Note**: This module expects the `ARN of an existing s3-Bucket`, `ID of an existing s3-Bucket`, `filename`, `source_path` and `handler` through the variable.
 
 
 ## Module Argument Reference
