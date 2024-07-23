@@ -166,81 +166,12 @@ See [variables.tf] and [examples/] for details and use-cases.
 
   Default is `"[]"`.
 
-- [**`aliases`**](#var-aliases): *(Optional `map(alias)`)*<a name="var-aliases"></a>
-
-  A map of aliases (keyed by the alias name) that will be created for the Lambda function. If `version` is omitted, the alias will automatically point to `$LATEST`.
-
-  Default is `{}`.
-
-  Example:
-
-  ```hcl
-  aliases = {
-    latest = {
-      description = "The newest deployment."
-      additional_version_weights = {
-        stable = 0.5
-      }
-    }
-    stable = {
-      version     = 2
-      description = "The latest stable deployment."
-    }
-  }
-  ```
-
-  Each `alias` object in the map accepts the following attributes:
-
-  - [**`description`**](#attr-aliases-description): *(Optional `string`)*<a name="attr-aliases-description"></a>
-
-    Description of the alias.
-
-  - [**`function_version`**](#attr-aliases-function_version): *(Optional `string`)*<a name="attr-aliases-function_version"></a>
-
-    Lambda function version for which you are creating the alias.
-    Pattern: `(\$LATEST|[0-9]+)`.
-
-    Default is `"$LATEST"`.
-
-  - [**`additional_version_weights`**](#attr-aliases-additional_version_weights): *(Optional `map(string)`)*<a name="attr-aliases-additional_version_weights"></a>
-
-    A map that defines the proportion of events that should be sent to different versions of a lambda function.
-
-- [**`description`**](#var-description): *(Optional `string`)*<a name="var-description"></a>
-
-  A description of what the Lambda function does.
-
-- [**`publish`**](#var-publish): *(Optional `bool`)*<a name="var-publish"></a>
-
-  Whether to publish creation/change as new Lambda function.
-  This allows you to use aliases to refer to execute different versions of the function in different environments.
-
-  Default is `false`.
-
-- [**`function_tags`**](#var-function_tags): *(Optional `map(string)`)*<a name="var-function_tags"></a>
-
-  A map of tags that will be applied to the function.
-
-  Default is `{}`.
-
-- [**`vpc_subnet_ids`**](#var-vpc_subnet_ids): *(Optional `set(string)`)*<a name="var-vpc_subnet_ids"></a>
-
-  A set of subnet IDs associated with the Lambda function.
-
-  Default is `[]`.
-
 - [**`layer_arns`**](#var-layer_arns): *(Optional `set(string)`)*<a name="var-layer_arns"></a>
 
   Set of Lambda Layer Version ARNs (maximum of 5) to attach to your Lambda function.
   For details see https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html
 
   Default is `[]`.
-
-- [**`reserved_concurrent_executions`**](#var-reserved_concurrent_executions): *(Optional `number`)*<a name="var-reserved_concurrent_executions"></a>
-
-  The amount of reserved concurrent executions for this Lambda function.
-  A value of 0 disables Lambda from being triggered and -1 removes any concurrency limitations.
-  For details see https://docs.aws.amazon.com/lambda/latest/dg/invocation-scaling.html
 
   Default is `-1`.
 
@@ -274,10 +205,6 @@ See [variables.tf] and [examples/] for details and use-cases.
 
   Default is `3`.
 
-- [**`dead_letter_config_target_arn`**](#var-dead_letter_config_target_arn): *(Optional `string`)*<a name="var-dead_letter_config_target_arn"></a>
-
-  The ARN of an SNS topic or SQS queue to notify when an invocation fails.
-  If this option is used, the function's IAM role must be granted suitable access to write to the target object, which means allowing either the 'sns:Publish' or 'sqs:SendMessage' action on this ARN, depending on which service is targeted.
 
 - [**`s3_key`**](#var-s3_key): *(Optional `string`)*<a name="var-s3_key"></a>
 
@@ -289,11 +216,6 @@ See [variables.tf] and [examples/] for details and use-cases.
   The object version containing the function's deployment package.
   Conflicts with `filename`.
 
-- [**`vpc_security_group_ids`**](#var-vpc_security_group_ids): *(Optional `set(string)`)*<a name="var-vpc_security_group_ids"></a>
-
-  A set of security group IDs associated with the Lambda function.
-
-  Default is `[]`.
 
 - [**`memory_size`**](#var-memory_size): *(Optional `number`)*<a name="var-memory_size"></a>
 
@@ -356,10 +278,6 @@ See [variables.tf] and [examples/] for details and use-cases.
     For API Gateway, this should be the ARN of the API, as described in
     https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-api.html.
 
-- [**`tracing_mode`**](#var-tracing_mode): *(Optional `string`)*<a name="var-tracing_mode"></a>
-
-  Can be either `PassThrough` or `Active`. If set to `PassThrough`, Lambda will only trace the request from an upstream service if it contains a tracing header with `sampled=1`. If set to `Active`, Lambda will respect any tracing header it receives from an upstream service. If no tracing header is received,
-  Lambda will call X-Ray for a tracing decision.
 
 ## Module Outputs
 
@@ -392,26 +310,3 @@ The following attributes are exported by the module:
   The map of tags that are being applied to all created resources that
   accept tags.
 
-## External Documentation
-
-### AWS Lambda Documentation
-
-- General Documentation: https://docs.aws.amazon.com/lambda/latest/dg/welcome.html
-- Functions: https://docs.aws.amazon.com/lambda/latest/dg/lambda-functions.html
-- Aliases: https://docs.aws.amazon.com/lambda/latest/dg/configuration-aliases.html
-
-### Terraform AWS Provider Documentation
-
-- https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function
-- https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_alias
-- https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission
-
-## Module Versioning
-
-This Module follows the principles of [Semantic Versioning (SemVer)].
-
-Given a version number `MAJOR.MINOR.PATCH`, we increment the:
-
-1. `MAJOR` version when we make incompatible changes,
-2. `MINOR` version when we add functionality in a backwards compatible manner, and
-3. `PATCH` version when we make backwards compatible bug fixes.
