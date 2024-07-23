@@ -3,12 +3,6 @@
 
 A [Terraform] module for deploying and managing [Serverless Lambda Functions] on [Amazon Web Services (AWS)][AWS].
 
-***This module supports both, Terraform v1.x, v0.15, v0.14, v0.13 as well as v0.12.20 and above.***
-
-This module is part of our Infrastructure as Code (IaC) framework
-that enables our users and customers to easily deploy and manage reusable,
-secure, and production-grade cloud infrastructure.
-
 ---
 
 The axiom-lambda-extension can send logs and platform events of your Lambda function to [Axiom](https://axiom.co/). Axiom will detect the extension and provide you with quick filters and a dashboard.
@@ -74,35 +68,11 @@ All Lambda Layers
 
 ## Terraform Example
 
-You can also use Terraform to hook up your Lambda with Axiom Lambda layer in two different ways:
+ Using Terraform to hook up your Lambda with Axiom Lambda:
 
-1. Using plain Terraform code:
-```tf
-resource "aws_lambda_function" "test_lambda" {
-  filename      = "lambda_function_payload.zip"
-  function_name = "lambda_function_name"
-  role          = aws_iam_role.iam_for_lambda.arn
-  handler       = "index.test"
-  runtime       = "nodejs14.x"
 
-  ephemeral_storage {
-    size = 10240 # Min 512 MB and the Max 10240 MB
-  }
 
-  environment {
-    variables = {
-      AXIOM_TOKEN   = "axiom-token"
-      AXIOM_DATASET = "axiom-dataset"
-    }
-  }
-
-  layers = [
-    "arn:aws:lambda:<AWS_REGION>:694952825951:layer:axiom-extension-<ARCH>:<VERSION>"
-  ]
-}
-```
-
-2. Using [AWS lambda module](https://registry.terraform.io/modules/terraform-aws-modules/lambda/aws/latest):
+Using [AWS lambda module](https://registry.terraform.io/modules/terraform-aws-modules/lambda/aws/latest):
 ```tf
 module "lambda_function" {
   source = "terraform-aws-modules/lambda/aws"
