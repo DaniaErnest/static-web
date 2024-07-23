@@ -1,5 +1,5 @@
 
-# terraform-aws-lambda-function
+# aws-lambda-function write the records to Axiom
 
 A [Terraform] module for deploying and managing [Serverless Lambda Functions] on [Amazon Web Services (AWS)][AWS].
 
@@ -8,6 +8,122 @@ A [Terraform] module for deploying and managing [Serverless Lambda Functions] on
 This module is part of our Infrastructure as Code (IaC) framework
 that enables our users and customers to easily deploy and manage reusable,
 secure, and production-grade cloud infrastructure.
+
+---
+
+The axiom-lambda-extension can send logs and platform events of your Lambda function to [Axiom](https://axiom.co/). Axiom will detect the extension and provide you with quick filters and a dashboard.
+
+With the Axiom Lambda extension, you can forget about the extra configuration of CloudWatch and subscription filters.
+
+**Note:** After the Axiom Lambda extension is installed, the Lambda service will still send logs to CloudWatch Logs. 
+
+To disable the CloudWatch logging, follow the steps below:
+
+* Install the Axiom Lambda extension;
+* Make sure everything is working properly in Axiom;
+* Disable the permissions for CloudWatch.
+
+For more detail on how to disable the CloudWatch logging, see the [Axiom documentation](https://www.axiom.co/docs/send-data/lambda#disable-cloudwatch-logging).
+
+## Quickstart
+
+1. Set these environment variables on your function:
+
+   - `AXIOM_DATASET`: The dataset name to send logs to. Learn more about creating a dataset [here](https://www.axiom.co/docs/reference/settings#dataset)
+   - `AXIOM_TOKEN`: The Axiom API token (needs ingest permission into the dataset above). Learn more about creating tokens [here](https://www.axiom.co/docs/restapi/token#creating-an-access-token)
+
+**note** the extensions will not work without correct credentials, but it will not crash your function. If you want it to crash for testing purposes
+check the [Troubleshooting](#troubleshooting) section below.
+
+
+2. Add the extension as a layer with the AWS CLI:
+
+```shell
+$ aws lambda update-function-configuration --function-name my-function \
+    --layers arn:aws:lambda:<AWS_REGION>:694952825951:layer:axiom-extension-<ARCH>:<VERSION>
+```
+* Use the **latest** version number specified on the [Releases](https://github.com/axiomhq/axiom-lambda-extension/releases) page for the `VERSION` parameter. For example, `4`.
+* For more detail on `AWS_REGION` and `ARCH` parameters, expand the table below:
+
+<details>
+<summary>
+All Lambda Layers
+</summary>
+
+|  Region | arm64 | x86_64 |
+|---------|--------|---------|
+| us-west-1 | `arn:aws:lambda:us-west-1:694952825951:layer:axiom-extension-arm64:<VERSION>` |  `arn:aws:lambda:us-west-1:694952825951:layer:axiom-extension-x86_64:<VERSION>` |
+| us-west-2  | `arn:aws:lambda:us-west-2:694952825951:layer:axiom-extension-arm64:<VERSION>` |  `arn:aws:lambda:us-west-2:694952825951:layer:axiom-extension-x86_64:<VERSION>` |
+| us-east-1 | `arn:aws:lambda:us-east-1:694952825951:layer:axiom-extension-arm64:<VERSION>` | `arn:aws:lambda:us-east-1:694952825951:layer:axiom-extension-x86_64:<VERSION>` |
+| us-east-2 | `arn:aws:lambda:us-east-2:694952825951:layer:axiom-extension-arm64:<VERSION>` |  `arn:aws:lambda:us-east-2:694952825951:layer:axiom-extension-x86_64:<VERSION>` |
+| eu-west-1 | `arn:aws:lambda:eu-west-1:694952825951:layer:axiom-extension-arm64:<VERSION>` | `arn:aws:lambda:eu-west-1:694952825951:layer:axiom-extension-x86_64:<VERSION>` |
+| eu-west-2 | `arn:aws:lambda:eu-west-2:694952825951:layer:axiom-extension-arm64:<VERSION>` |  `arn:aws:lambda:eu-west-2:694952825951:layer:axiom-extension-x86_64:<VERSION>` |
+| eu-west-3  | `arn:aws:lambda:eu-west-3:694952825951:layer:axiom-extension-arm64:<VERSION>` |  `arn:aws:lambda:eu-west-3:694952825951:layer:axiom-extension-x86_64:<VERSION>` |
+| eu-north-1 | `arn:aws:lambda:eu-north-1:694952825951:layer:axiom-extension-arm64:<VERSION>` | `arn:aws:lambda:eu-north-1:694952825951:layer:axiom-extension-x86_64:<VERSION>` |
+| eu-central-1 | `arn:aws:lambda:eu-central-1:694952825951:layer:axiom-extension-arm64:<VERSION>` |  `arn:aws:lambda:eu-central-1:694952825951:layer:axiom-extension-x86_64:<VERSION>` |
+| ca-central-1 | `arn:aws:lambda:ca-central-1:694952825951:layer:axiom-extension-arm64:<VERSION>` | `arn:aws:lambda:ca-central-1:694952825951:layer:axiom-extension-x86_64:<VERSION>` |
+| sa-east-1 | `arn:aws:lambda:sa-east-1:694952825951:layer:axiom-extension-arm64:<VERSION>` |  `arn:aws:lambda:sa-east-1:694952825951:layer:axiom-extension-x86_64:<VERSION>` |
+| ap-south-1  | `arn:aws:lambda:ap-south-1:694952825951:layer:axiom-extension-arm64:<VERSION>` |  `arn:aws:lambda:ap-south-1:694952825951:layer:axiom-extension-x86_64:<VERSION>` |
+| ap-southeast-1 | `arn:aws:lambda:ap-southeast-1:694952825951:layer:axiom-extension-arm64:<VERSION>` | `arn:aws:lambda:ap-southeast-1:694952825951:layer:axiom-extension-x86_64:<VERSION>` |
+| ap-southeast-2 | `arn:aws:lambda:ap-southeast-2:694952825951:layer:axiom-extension-arm64:<VERSION>` |  `arn:aws:lambda:ap-southeast-2:694952825951:layer:axiom-extension-x86_64:<VERSION>` |
+| ap-northeast-1 | `arn:aws:lambda:ap-northeast-1:694952825951:layer:axiom-extension-arm64:<VERSION>` | `arn:aws:lambda:ap-northeast-1:694952825951:layer:axiom-extension-x86_64:<VERSION>` |
+| ap-northeast-2 | `arn:aws:lambda:ap-northeast-2:694952825951:layer:axiom-extension-arm64:<VERSION>` |  `arn:aws:lambda:ap-northeast-2:694952825951:layer:axiom-extension-x86_64:<VERSION>` |
+| ap-northeast-3  | `arn:aws:lambda:ap-northeast-3:694952825951:layer:axiom-extension-arm64:<VERSION>` |  `arn:aws:lambda:ap-northeast-3:694952825951:layer:axiom-extension-x86_64:<VERSION>` |
+</details>
+
+
+## Terraform Example
+
+You can also use Terraform to hook up your Lambda with Axiom Lambda layer in two different ways:
+
+1. Using plain Terraform code:
+```tf
+resource "aws_lambda_function" "test_lambda" {
+  filename      = "lambda_function_payload.zip"
+  function_name = "lambda_function_name"
+  role          = aws_iam_role.iam_for_lambda.arn
+  handler       = "index.test"
+  runtime       = "nodejs14.x"
+
+  ephemeral_storage {
+    size = 10240 # Min 512 MB and the Max 10240 MB
+  }
+
+  environment {
+    variables = {
+      AXIOM_TOKEN   = "axiom-token"
+      AXIOM_DATASET = "axiom-dataset"
+    }
+  }
+
+  layers = [
+    "arn:aws:lambda:<AWS_REGION>:694952825951:layer:axiom-extension-<ARCH>:<VERSION>"
+  ]
+}
+```
+
+2. Using [AWS lambda module](https://registry.terraform.io/modules/terraform-aws-modules/lambda/aws/latest):
+```tf
+module "lambda_function" {
+  source = "terraform-aws-modules/lambda/aws"
+
+  function_name = "my-lambda1"
+  description   = "My awesome lambda function"
+  handler       = "index.lambda_handler"
+  runtime       = "python3.8"
+
+  source_path = "../src/lambda-function1"
+
+  layers = [
+    "arn:aws:lambda:<AWS_REGION>:694952825951:layer:axiom-extension-<ARCH>:<VERSION>"
+  ]
+
+  environment_variables = {
+    AXIOM_TOKEN   = "axiom-token"
+    AXIOM_DATASET = "axiom-dataset"
+  }
+}
+```
 
 
 
