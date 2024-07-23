@@ -10,22 +10,6 @@ that enables our users and customers to easily deploy and manage reusable,
 secure, and production-grade cloud infrastructure.
 
 
-- [Module Features](#module-features)
-- [Getting Started](#getting-started)
-- [Module Argument Reference](#module-argument-reference)
-  - [Top-level Arguments](#top-level-arguments)
-    - [Module Configuration](#module-configuration)
-    - [Lambda Function Resource Configuration](#lambda-function-resource-configuration)
-- [Module Outputs](#module-outputs)
-- [External Documentation](#external-documentation)
-  - [AWS Lambda Documentation](#aws-lambda-documentation)
-  - [Terraform AWS Provider Documentation](#terraform-aws-provider-documentation)
-- [Module Versioning](#module-versioning)
-  - [Backwards compatibility in `0.0.z` and `0.y.z` version](#backwards-compatibility-in-00z-and-0yz-version)
-- [About Mineiros](#about-mineiros)
-- [Reporting Issues](#reporting-issues)
-- [Makefile Targets](#makefile-targets)
-- [License](#license)
 
 ## Module Features
 
@@ -364,33 +348,3 @@ Given a version number `MAJOR.MINOR.PATCH`, we increment the:
 1. `MAJOR` version when we make incompatible changes,
 2. `MINOR` version when we add functionality in a backwards compatible manner, and
 3. `PATCH` version when we make backwards compatible bug fixes.
-
-### Backwards compatibility in `0.0.z` and `0.y.z` version
-
-- Backwards compatibility in versions `0.0.z` is **not guaranteed** when `z` is increased. (Initial development)
-- Backwards compatibility in versions `0.y.z` is **not guaranteed** when `y` is increased. (Pre-release)
-
-## About Mineiros
-
-[Mineiros][homepage] is a remote-first company headquartered in Berlin, Germany
-that solves development, automation and security challenges in cloud infrastructure.
-
-Our vision is to massively reduce time and overhead for teams to manage and
-deploy production-grade and secure cloud infrastructure.
-
-We offer commercial support for all of our modules and encourage you to reach out
-if you have any questions or need help. Feel free to email us at [hello@mineiros.io] or join our
-[Community Slack channel][slack].
-
-## Reporting Issues
-
-We use GitHub [Issues] to track community reported issues and missing features.
-
-## Makefile Targets
-
-This repository comes with a handy [Makefile].
-Run `make help` to see details on each available target.
-
-## License
-
-
