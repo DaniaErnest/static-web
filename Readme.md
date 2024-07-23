@@ -106,23 +106,20 @@ These are some of our custom features:
 
 Most basic usage just setting required arguments:
 
-```hcl
-module "terraform-aws-lambda-function" {
-  source  = "mineiros-io/lambda-function/aws"
-  version = "~> 0.5.0"
-
-  runtime  = "python3.8"
-  handler  = "main"
-  role_arn = aws_iam_role.lambda.arn
-  filename = "deployment.zip"
+```tf
+module "lambda_triggered" {
+  source = "../lambda"
+  function_name = "axiom_lambda"
+  bucket_arn = module.s3_bucket.arn
+  bucket_id = module.s3_bucket.id
+  filename = local.module_source_path
+  source_path = local.module_source_hash 
+  handler = "axiom_lambda.lambda_handler"
 }
 ```
 
-**Note**: This module expects the ARN of an existing IAM Role through the `role_arn` variable.
-You can consider or [terraform-aws-iam-role] module for easily setting up IAM Roles.
+**Note**: This module expects the ARN of an existing s3-Bucket, ID of an existing s3-Bucket, filename, source_path and handler through the variable.
 
-Advanced examples can be found in [examples/s3-complete-example/main.tf] setting
-all required and optional arguments to their default values.
 
 ## Module Argument Reference
 
